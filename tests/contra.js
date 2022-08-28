@@ -14,12 +14,19 @@ const data = [];
   await page.waitForSelector('#site-main');
   await page.waitForTimeout(5000);
 
-  const posts = await page.$$('#questionForm');
+  const questions = await page.$$('#questionForm');
+  const choices = await page.$$('.answer-container');
 
-  for (let post of posts) {
-    const question = await post.$eval('#question', el => el.innerText);
-    const answers = await post.$eval('.answer-text', el => el.innerText);
-    data.push({ question, answers });
+  for (let question of questions) {
+    const title = await question.$eval('#question', el => el.innerText);
+
+    const answers = [];
+    for (let answer of choices) {
+      const choice = await answer.$eval('.answer-text', el => el.innerText);
+      answers.push(choice);
+    }
+
+    data.push({ title, answers });
   }
 
   console.log(data);
