@@ -10,18 +10,16 @@ const data = [];
   const context = await browser.newContext();
   const page = await context.newPage();
 
-  await page.goto('https://old.reddit.com/r/askreddit');
-  await page.waitForSelector('#siteTable');
+  await page.goto('https://www.contradefensa.com/certified-ethical-hacker/');
+  await page.waitForSelector('#site-main');
+  await page.waitForTimeout(5000);
 
-  const posts = await page.$$('div.thing');
+  const posts = await page.$$('#questionForm');
 
   for (let post of posts) {
-    const title = await post.$eval('.title a', el => el.textContent);
-    const url = await post.$eval('.title a', el => el.href);
-    const upvotes = await post.$eval('.score.unvoted', el => el.textContent);
-    const comments = await post.$eval('.comments', el => el.textContent);
-    const time = await post.$eval('.tagline time', el => el.textContent);
-    data.push({ title, url, upvotes, comments, time });
+    const question = await post.$eval('#question', el => el.innerText);
+    const answers = await post.$eval('.answer-text', el => el.innerText);
+    data.push({ question, answers });
   }
 
   console.log(data);
