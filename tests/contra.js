@@ -12,7 +12,8 @@ const data = [];
 
   await page.goto('https://www.contradefensa.com/certified-ethical-hacker/');
   await page.waitForSelector('#site-main');
-  await page.waitForTimeout(5000);
+// Wait for questions are loaded
+  await page.waitForLoadState('networkidle');
 
   const questions = await page.$$('#questionForm');
   const choices = await page.$$('.answer-container');
