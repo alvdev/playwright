@@ -11,13 +11,12 @@ const data = [];
   const page = await context.newPage();
 
   await page.goto('https://www.contradefensa.com/certified-ethical-hacker/');
-  // Wait for questions are loaded
-  await page.waitForLoadState('networkidle');
 
   let counter = 0;
-  while (counter < 10) {
-    await page.click('.answer-text');
-    await page.waitForLoadState('load');
+  while (counter < 5) {
+    // Wait for questions are loaded
+    await page.waitForLoadState('networkidle');
+
     const question = await page.$eval('#question', el => el.textContent);
     const choices = await page.$$('.answer-container');
 
@@ -29,6 +28,9 @@ const data = [];
 
     data.push({ question, answers });
     counter++;
+
+    await page.waitForTimeout(2000);
+    await page.click('.answer-text');
   }
 
   console.log(data);
