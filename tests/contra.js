@@ -3,7 +3,7 @@ const data = [];
 
 (async () => {
   const browser = await playwright['chromium'].launch({
-    headless: true,
+    headless: false,
     args: ['--no-sandbox'],
   });
 
@@ -11,8 +11,7 @@ const data = [];
   const page = await context.newPage();
 
   await page.goto('https://www.contradefensa.com/certified-ethical-hacker/');
-  await page.waitForSelector('#site-main');
-// Wait for questions are loaded
+  // Wait for questions are loaded
   await page.waitForLoadState('networkidle');
 
   const questions = await page.$$('#questionForm');
@@ -26,7 +25,9 @@ const data = [];
       const choice = await answer.$eval('.answer-text', el => el.innerText);
       answers.push(choice);
     }
-
+    await page.click('.answer-text');
+    await page.waitForLoadState('load');
+    await page.waitForTimeout(2000);
     data.push({ title, answers });
   }
 
